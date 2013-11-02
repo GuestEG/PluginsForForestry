@@ -17,8 +17,7 @@ import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.client.IconConstants
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
 import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
 import denoflionsx.denLib.Mod.Handlers.IDictionaryListener;
-import denoflionsx.denLib.Mod.Handlers.WorldHandler.IdenWorldEventHandler;
-import denoflionsx.denLib.Mod.Handlers.WorldHandler.WorldEventHandler;
+import denoflionsx.denLib.Mod.Handlers.NewWorldHandler.IDenLibWorldHandler;
 import denoflionsx.denLib.Mod.denLibMod;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -29,11 +28,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 public class PluginLR implements IPfFPlugin {
-
+    
     public static HashMap<String, ArrayList<String>> blackLists = new HashMap();
     //-----
-    public static Item woodenBucket;
-    public static Item barrel;
+    public static ItemWoodenBucket woodenBucket;
+    public static ItemBarrel barrel;
     public static Item hammer;
     public static Item rings;
     public static WoodenBucketRecipeManager woodenBucketRecipes;
@@ -43,14 +42,14 @@ public class PluginLR implements IPfFPlugin {
     public static Fluid peat;
     public static Fluid melon;
     public static FluidIconHandler iconHandler;
-
+    
     @Override
     public void onPreLoad() {
         PfF.Proxy.registerRenderable(this);
         PfFAPI.sendBlacklistRequest("woodenBucket", FluidRegistry.LAVA.getName());
         PfFAPI.sendBlacklistRequest("barrel", FluidRegistry.LAVA.getName());
     }
-
+    
     @Override
     public void onLoad() {
         this.registerFluids();
@@ -69,7 +68,7 @@ public class PluginLR implements IPfFPlugin {
             barrelRecipes = new BarrelRecipeManager();
         }
     }
-
+    
     @Override
     public void onPostLoad() {
         try {
@@ -79,7 +78,7 @@ public class PluginLR implements IPfFPlugin {
                 if (o != null) {
                     if (o instanceof ItemContainerBase) {
                         denLibMod.DictionaryHandler.registerListener((IDictionaryListener) o, DictionaryHandler.channels.FLUID);
-                        WorldEventHandler.registerHandler((IdenWorldEventHandler) o);
+                        denLibMod.worldHandler.registerHandler((IDenLibWorldHandler) o);
                     }
                 }
             }
@@ -89,7 +88,7 @@ public class PluginLR implements IPfFPlugin {
         FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(peat.getName(), 1), 1.5f);
         FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(veggie.getName(), 1), 1.5f);
     }
-
+    
     public void registerFluids() {
         PfF.Proxy.print("Setting up fluids...");
         //------------------------------------------------------

@@ -6,6 +6,8 @@ import net.minecraft.util.Icon;
 
 public interface IPfFProxy {
     
+    public File getMappingFile(String tag);
+    
     public void print(String msg);
     
     public void warning(String msg);

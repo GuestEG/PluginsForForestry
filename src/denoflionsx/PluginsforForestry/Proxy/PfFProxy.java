@@ -21,6 +21,11 @@ public class PfFProxy implements IPfFProxy {
     public ArrayList<Class> ItemCollections = new ArrayList();
 
     @Override
+    public File getMappingFile(String tag) {
+        return new File(PfF.core.mappingsDir.getAbsolutePath() + "/".concat(tag) + ".bin");
+    }
+
+    @Override
     public void print(String msg) {
         FMLLog.info("[PfF]" + ": " + msg);
     }

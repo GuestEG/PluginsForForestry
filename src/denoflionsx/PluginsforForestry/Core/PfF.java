@@ -15,13 +15,21 @@ import denoflionsx.PluginsforForestry.Config.PfFTuning;
 import denoflionsx.PluginsforForestry.IMC.IMCHandler;
 import denoflionsx.PluginsforForestry.Lang.PfFTranslator;
 import denoflionsx.PluginsforForestry.Managers.PfFPluginManager;
+import denoflionsx.PluginsforForestry.Net.PfFConnectionHandler;
+import denoflionsx.PluginsforForestry.Net.PfFPacketHandlerClient;
+import denoflionsx.PluginsforForestry.Net.PfFPacketHandlerCommon;
 import denoflionsx.PluginsforForestry.Proxy.PfFProxy;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
 import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
 import denoflionsx.denLib.Mod.denLibMod;
 
 @Mod(modid = "@NAME@", name = "@NAME@", version = "@VERSION@", dependencies = "@DEPENDS@")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true)
+@NetworkMod(clientSideRequired = true, serverSideRequired = true,
+        clientPacketHandlerSpec =
+        @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerClient.class),
+        serverPacketHandlerSpec =
+        @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerCommon.class),
+        connectionHandler = PfFConnectionHandler.class)
 public class PfF {
 
     @Mod.Instance("@NAME@")
@@ -29,6 +37,7 @@ public class PfF {
     @SidedProxy(clientSide = "@PROXYCLIENT@", serverSide = "@PROXYSERVER@")
     public static PfFProxy Proxy;
     public static PfFCore core;
+    public static final String channel = "PluginsFF";
 
     public PfF() {
         PfFAPI.plugins = new PfFPluginManager();
