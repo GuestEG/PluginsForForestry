@@ -25,9 +25,9 @@ public class Spring extends HolidayObject {
         try {
             Random rand = new Random();
             int roll = rand.nextInt(4);
-            this.setIcon("spring_bucket_".concat(iconMap.get(roll)));
+            this.setIcon("holiday/spring/spring_bucket_".concat(iconMap.get(roll)));
         } catch (Throwable t) {
-            this.setIcon("spring_bucket_".concat(iconMap.get(0)));
+            this.setIcon("holiday/spring/spring_bucket_".concat(iconMap.get(0)));
             denLibMod.log(t.getLocalizedMessage());
         }
         super.setupHolidayContent();
