@@ -101,10 +101,6 @@ public class PfFLib {
             if (n.contains(".")) {
                 n = n.replace(".", " ");
             }
-            // Wtf Sengir, bioethanol?
-            if (n.equals("bioethanol")) {
-                n = "biofuel";
-            }
             return Character.toUpperCase(n.charAt(0)) + n.substring(1);
         }
     }
