@@ -3,6 +3,7 @@ package denoflionsx.PluginsforForestry.Net;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import denoflionsx.PluginsforForestry.Net.Packets.HandlerBarrelSync;
+import denoflionsx.PluginsforForestry.Net.Packets.HandlerInvalidSync;
 import denoflionsx.PluginsforForestry.Net.Packets.HandlerSyncComplete;
 import denoflionsx.PluginsforForestry.Net.Packets.HandlerWoodenBucketSync;
 import denoflionsx.PluginsforForestry.Net.Packets.PacketProcessor;
@@ -27,7 +28,9 @@ public class PfFPacketHandler implements IPacketHandler {
 
         WoodenBucket_Sync(0, new HandlerWoodenBucketSync()),
         Barrel_Sync(1, new HandlerBarrelSync()),
-        Sync_Complete(2, new HandlerSyncComplete());
+        Sync_Complete(2, new HandlerSyncComplete()),
+        // This should literally never happen. It was made for debug during development. Just in case I'll leave it functional...
+        Invalid_Sync(3, new HandlerInvalidSync());
         //-------------
         private int id;
         private IPacketHandler handler;

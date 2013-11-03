@@ -10,6 +10,7 @@ import denoflionsx.PluginsforForestry.API.PfFAPI;
 import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.PluginsforForestry.Lang.PfFTranslator;
 import denoflionsx.PluginsforForestry.ModAPIWrappers.Forestry;
+import denoflionsx.PluginsforForestry.Net.PfFConnectionHandler;
 import denoflionsx.PluginsforForestry.Net.PfFPacketHandler;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.PluginLR;
 import denoflionsx.PluginsforForestry.Utils.PfFLib;
@@ -134,7 +135,7 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
             }
             fluids.put(id, tag);
             if (!regen) {
-                PfF.Proxy.print("Generating " + this.tag + " for " + this.tag);
+                PfF.Proxy.print("Generating " + this.tag + " for " + tag);
             }
             ItemStack filled = new ItemStack(this, 1, id);
             stacks.add(filled);
@@ -149,16 +150,22 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
         }
     }
 
-    public void regenerateMaps() {
+    public void regenerateMaps(boolean flag, String hash) {
         PfF.Proxy.print("Server is sending mapping data for " + this.tag + ".");
         this.filledMap.clear();
-        this.fluids.clear();
         this.colorMapMeta.clear();
+        this.stacks.clear();
+        this.stacks.add(empty);
         for (Fluid f : fluidCache) {
             FluidStack f1 = new FluidStack(f, this.capacity);
-            this.doMapping(f1, true);
+            this.doMapping(f1, flag);
         }
-        PacketDispatcher.sendPacketToServer(PfFPacketHandler.PacketMaker.createOkPacket(this.tag));
+        String local = PfFConnectionHandler.hashTheMap(fluids);
+        if (local.equals(hash)) {
+            PacketDispatcher.sendPacketToServer(PfFPacketHandler.PacketMaker.createOkPacket(this.tag));
+        } else {
+            PacketDispatcher.sendPacketToServer(PfFPacketHandler.PacketMaker.createInvalidHashPacket(local, hash));
+        }
     }
 
     @Override

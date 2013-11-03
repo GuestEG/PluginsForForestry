@@ -11,6 +11,6 @@ public class HandlerSyncComplete implements IPacketHandler {
 
     @Override
     public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
-        PfF.Proxy.print(PfFPacketHandler.PacketMaker.readOkPacket(packet) + " Syncing complete for " + PfFPacketHandler.getUserName(player));
+        PfF.Proxy.print(PfFPacketHandler.PacketMaker.readOkPacket(packet) + " Syncing complete and verified for " + PfFPacketHandler.getUserName(player));
     }
 }

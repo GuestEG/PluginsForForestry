@@ -10,6 +10,33 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 public class PacketProcessor {
 
+    public String[] getInvalidHashPacketData(Packet250CustomPayload packet){
+        NBTTagCompound tag = new NBTTagCompound();
+        try {
+            tag = CompressedStreamTools.decompress(packet.data);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        return new String[]{tag.getString("local"), tag.getString("remote")};
+    }
+    
+    public Packet250CustomPayload createInvalidHashPacket(String localhash, String remotehash) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("id", PfFPacketHandler.Packets.Invalid_Sync.getId());
+        tag.setString("local", localhash);
+        tag.setString("remote", remotehash);
+        Packet250CustomPayload packet = new Packet250CustomPayload();
+        try {
+            packet.data = CompressedStreamTools.compress(tag);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        packet.channel = PfF.channel;
+        packet.length = packet.data.length;
+        packet.isChunkDataPacket = false;
+        return packet;
+    }
+
     public int getInternalIdFromPacket(Packet250CustomPayload packet) {
         NBTTagCompound tag = new NBTTagCompound();
         try {
@@ -31,10 +58,32 @@ public class PacketProcessor {
         return fluids;
     }
 
-    public Packet250CustomPayload createSyncPacket(int id, BiMap<Integer, String> map) {
+    public boolean getFlagFromSyncPacket(Packet250CustomPayload packet) {
+        NBTTagCompound tag = new NBTTagCompound();
+        try {
+            tag = CompressedStreamTools.decompress(packet.data);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        return tag.getBoolean("flag");
+    }
+
+    public String getHashFromSyncPacket(Packet250CustomPayload packet) {
+        NBTTagCompound tag = new NBTTagCompound();
+        try {
+            tag = CompressedStreamTools.decompress(packet.data);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        return tag.getString("hash");
+    }
+
+    public Packet250CustomPayload createSyncPacket(int id, BiMap<Integer, String> map, boolean flag, String hash) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("id", id);
         tag.setByteArray("bimap", denLib.FileUtils.turnObjectToByteArray(map));
+        tag.setBoolean("flag", flag);
+        tag.setString("hash", hash);
         Packet250CustomPayload packet = new Packet250CustomPayload();
         try {
             packet.data = CompressedStreamTools.compress(tag);

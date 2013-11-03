@@ -8,10 +8,10 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 public class HandlerBarrelSync implements IPacketHandler {
-
+    
     @Override
     public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
         PluginLR.barrel.setFluids(PfFPacketHandler.PacketMaker.getSyncDataFromPacket(packet));
-        PluginLR.barrel.regenerateMaps();
+        PluginLR.barrel.regenerateMaps(PfFPacketHandler.PacketMaker.getFlagFromSyncPacket(packet), PfFPacketHandler.PacketMaker.getHashFromSyncPacket(packet));
     }
 }
