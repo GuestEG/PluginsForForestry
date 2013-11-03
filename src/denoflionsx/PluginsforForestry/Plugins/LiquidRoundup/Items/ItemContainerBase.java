@@ -40,6 +40,7 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
     protected BiMap<Integer, String> fluids = HashBiMap.create();
     protected HashMap<Integer, ItemStack> filledMap = new HashMap();
     protected ArrayList<ItemStack> stacks = new ArrayList();
+    protected ArrayList<FluidContainerData> dataCache = new ArrayList();
     private ItemStack empty;
     private boolean isBucket = false;
     private int capacity;
@@ -135,11 +136,13 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
             }
             fluids.put(id, tag);
             if (!regen) {
-                PfF.Proxy.print("Generating " + this.tag + " for " + tag);
+                PfF.Proxy.print("Generating " + this.tag + " for " + tag + " on " + String.valueOf(id));
             }
             ItemStack filled = new ItemStack(this, 1, id);
             stacks.add(filled);
-            FluidContainerRegistry.registerFluidContainer(new FluidContainerData(f, filled, empty, isBucket));
+            FluidContainerData d = new FluidContainerData(f, filled, empty, isBucket);
+            FluidContainerRegistry.registerFluidContainer(d);
+            dataCache.add(d);
             Forestry.squeezer(5, new ItemStack[]{filled}, f);
             if (f.getFluid().canBePlacedInWorld() && this.isBucket) {
                 filledMap.put(f.getFluid().getBlockID(), filled);
@@ -152,6 +155,10 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
 
     public void regenerateMaps(boolean flag, String hash) {
         PfF.Proxy.print("Server is sending mapping data for " + this.tag + ".");
+        for (FluidContainerData d : dataCache) {
+            FluidContainerRegistry.unregisterFluidContainer(d);
+        }
+        this.dataCache.clear();
         this.filledMap.clear();
         this.colorMapMeta.clear();
         this.stacks.clear();

@@ -34,7 +34,6 @@ public class PfFConnectionHandler implements IConnectionHandler {
     @Override
     public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
         PfF.Proxy.print(PfFPacketHandler.getUserName(player) + " is logging in. Sending container maps...");
-
         PacketDispatcher.sendPacketToPlayer(PfFPacketHandler.PacketMaker.createSyncPacket(PfFPacketHandler.Packets.WoodenBucket_Sync.getId(), PluginLR.woodenBucket.getFluids(), !netDebug, hashTheMap(PluginLR.woodenBucket.getFluids())), player);
         PacketDispatcher.sendPacketToPlayer(PfFPacketHandler.PacketMaker.createSyncPacket(PfFPacketHandler.Packets.Barrel_Sync.getId(), PluginLR.barrel.getFluids(), !netDebug, hashTheMap(PluginLR.barrel.getFluids())), player);
     }

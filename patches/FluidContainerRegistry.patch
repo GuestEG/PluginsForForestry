@@ -1,0 +1,15 @@
+138a139,150
+>     
+>     public static boolean unregisterFluidContainer(FluidContainerData data){
+>         if (!isFilledContainer(data.filledContainer)){
+>             return false;
+>         }
+>         containerFluidMap.remove(Arrays.asList(data.filledContainer.itemID, data.filledContainer.getItemDamage()));
+>         if (data.emptyContainer != null && data.emptyContainer != NULL_EMPTYCONTAINER){
+>              filledContainerMap.remove(Arrays.asList(data.emptyContainer.itemID, data.emptyContainer.getItemDamage(), data.fluid.fluidID));
+>              emptyContainers.remove(Arrays.asList(data.emptyContainer.itemID, data.emptyContainer.getItemDamage()));
+>         }
+>         return true;
+>     }
+277d288
+< 

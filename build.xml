@@ -7,12 +7,32 @@
 	
     
     <target name="-downloads">
+        <echo message="WINDOWS USERS: YOU NEED CYGWIN INSTALLED FOR THIS SCRIPT TO WORK! SORRY!"/>
+        <echo message="I'll download it for you!"/>
+        <get src="http://cygwin.com/setup-x86_64.exe" dest="${download.dir}/setup-x86_64.exe" usetimestamp="True"/>
+        <echo message="MAKE SURE YOU SELECT PATCH FROM DEVEL DURING INSTALLATION. IT ISN'T THERE BY DEFAULT."/>
+        <echo message="YOU ALSO NEED TO MAKE SURE CYGWIN'S BIN FOLDER IS ON YOUR PATH!"/>
+        <get src="https://dl.dropboxusercontent.com/u/23892866/Downloads/dos2unix.zip" dest="${download.dir}/dos2unix.zip" usetimestamp="True"/>
+        <unzip src="${download.dir}/dos2unix.zip" dest="${download.dir}"/>
         <get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.0/forestry-api-2.3.0.0.zip" dest="${download.dir}" usetimestamp="True"/>
         <get src="https://github.com/denoflionsx/BuildCraft/archive/master.zip" dest="${download.dir}/BuildCraft-master.zip" usetimestamp="True"/>
         <get src="https://dl.dropboxusercontent.com/u/23892866/Downloads/Railcraft_API_1.6.2-8.1.0.0.zip" dest="${download.dir}/Railcraft.zip" useTimeStamp="true"/>
         <unzip dest="${download.dir}/Forestry" src="${download.dir}/forestry-api-2.3.0.0.zip"/>
         <unzip dest="${download.dir}/BuildCraft" src="${download.dir}/BuildCraft-master.zip"/>
         <unzip dest="${download.dir}/Railcraft" src="${download.dir}/Railcraft.zip"/>
+    </target>
+    
+    <target name="-postforge">
+        <exec dir="." executable="cmd" osfamily="windows">
+            <arg line="/c ${download.dir}\dos2unix\bin\dos2unix.exe ${mcpsrc.dir}/minecraft/net/minecraftforge/fluids/FluidContainerRegistry.java"/>
+        </exec>
+        <patch patchfile="patches/FluidContainerRegistry.patch" originalfile="${mcpsrc.dir}/minecraft/net/minecraftforge/fluids/FluidContainerRegistry.java" failonerror="true" backups="true"/>
+        <exec dir="${mcp.dir}" executable="cmd" osfamily="windows" inputstring="Yes">
+            <arg line="/c updatemd5.bat"/>
+        </exec>
+        <exec dir="${mcp.dir}" executable="sh" osfamily="unix" inputstring="Yes">
+            <arg value="updatemd5.sh" />
+        </exec>
     </target>
     
     <target name="-precompile">
@@ -60,6 +80,7 @@
         <java jar="${download.dir}/AnimationConverter.jar" fork="true" output="${classes.dir}/assets/pluginsforforestry/textures/blocks/fluid/vegetable.still.png.mcmeta">
             <arg value="${resources.dir}/assets/pluginsforforestry/textures/blocks/fluid/vegetable.still.txt"/>
         </java> 
+        <delete dir="${classes.dir}/mods"/>
     </target>
     
     <target name="-postbuild">
