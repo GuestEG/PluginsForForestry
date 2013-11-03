@@ -2,7 +2,7 @@ package denoflionsx.PluginsforForestry.Plugins.LiquidRoundup;
 
 import denoflionsx.PluginsforForestry.API.PfFAPI;
 import denoflionsx.PluginsforForestry.API.Plugin.IPfFPlugin;
-import denoflionsx.PluginsforForestry.Config.PfFTuning;
+import denoflionsx.PluginsforForestry.Config.ItemNameBridge;
 import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Fluid.FluidIconHandler;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Fluid.PfFFluid;
@@ -12,63 +12,67 @@ import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemContainerB
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemHammer;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemRings;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemWoodenBucket;
-import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.WoodenBucketRecipeManager;
-import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.client.IconConstants;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
 import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
 import denoflionsx.denLib.Mod.Handlers.IDictionaryListener;
 import denoflionsx.denLib.Mod.Handlers.NewWorldHandler.IDenLibWorldHandler;
 import denoflionsx.denLib.Mod.denLibMod;
+import denoflionsx.denLib.NewConfig.ConfigField;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 public class PluginLR implements IPfFPlugin {
-    
+
     public static HashMap<String, ArrayList<String>> blackLists = new HashMap();
     //-----
     public static ItemWoodenBucket woodenBucket;
     public static ItemBarrel barrel;
     public static Item hammer;
     public static Item rings;
-    public static WoodenBucketRecipeManager woodenBucketRecipes;
-    public static BarrelRecipeManager barrelRecipes;
     public static HashMap<String, ItemStack> stacks = new HashMap();
     public static Fluid veggie;
     public static Fluid peat;
-    public static Fluid melon;
     public static FluidIconHandler iconHandler;
-    
+    //-----------------------------------------
+    @ConfigField(category = "features")
+    public static boolean barrel_enabled = true;
+    @ConfigField(category = "features")
+    public static boolean woodenBucket_enabled = true;
+
     @Override
     public void onPreLoad() {
-        PfF.Proxy.registerRenderable(this);
         PfFAPI.sendBlacklistRequest("woodenBucket", FluidRegistry.LAVA.getName());
         PfFAPI.sendBlacklistRequest("barrel", FluidRegistry.LAVA.getName());
     }
-    
+
     @Override
     public void onLoad() {
         this.registerFluids();
-        if (PfFTuning.getInt(PfFTuning.Buckets.woodenbucket_ItemID) > 0) {
-            woodenBucket = new ItemWoodenBucket(PfFTuning.getInt(PfFTuning.Buckets.woodenbucket_ItemID), 1000, "item.pff.woodenbucket.name", "woodenBucket", IconConstants.woodenBucket);
-            woodenBucketRecipes = new WoodenBucketRecipeManager();
+        if (woodenBucket_enabled) {
+            woodenBucket = (ItemWoodenBucket) ItemNameBridge.registerItem("PfF:woodenBucket", ItemWoodenBucket.class);
+            PfF.Proxy.registerRecipe(PluginLR.stacks.get("woodenBucket"), new Object[]{"LXL", "XLX", "XXX", Character.valueOf('L'), Block.wood});
+            PfF.Proxy.registerRecipe(PluginLR.stacks.get("woodenBucket"), new Object[]{"XXX", "LXL", "XLX", Character.valueOf('L'), Block.wood});
+            //--
+            PfF.Proxy.registerOreRecipe(PluginLR.stacks.get("woodenBucket"), new Object[]{"LXL", "XLX", "XXX", Character.valueOf('L'), "logWood"});
+            PfF.Proxy.registerOreRecipe(PluginLR.stacks.get("woodenBucket"), new Object[]{"XXX", "LXL", "XLX", Character.valueOf('L'), "logWood"});
         }
-        if (PfFTuning.getInt(PfFTuning.Items.hammer_ItemID) > 0) {
-            hammer = new ItemHammer(PfFTuning.getInt(PfFTuning.Items.hammer_ItemID));
-        }
-        if (PfFTuning.getInt(PfFTuning.Items.rings_ItemID) > 0) {
-            rings = new ItemRings(PfFTuning.getInt(PfFTuning.Items.rings_ItemID));
-        }
-        if (PfFTuning.getInt(PfFTuning.Items.barrel_ItemID) > 0) {
-            barrel = new ItemBarrel(PfFTuning.getInt(PfFTuning.Items.barrel_ItemID), PfFTuning.getInt(PfFTuning.Barrel.barrel_capacity), "item.pff.barrel.name", "barrel", "barrel");
-            barrelRecipes = new BarrelRecipeManager();
+        if (barrel_enabled) {
+            hammer = ItemNameBridge.registerItem("PfF:hammer", ItemHammer.class);
+            rings = ItemNameBridge.registerItem("PfF:rings", ItemRings.class);
+            barrel = (ItemBarrel) ItemNameBridge.registerItem("PfF:Barrel", ItemBarrel.class);
+            BarrelRecipeManager barrelRecipes = new BarrelRecipeManager();
+            barrelRecipes.barrel();
+            barrelRecipes.hammer();
+            barrelRecipes.rings();
         }
     }
-    
+
     @Override
     public void onPostLoad() {
         try {
@@ -85,10 +89,11 @@ public class PluginLR implements IPfFPlugin {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+
         FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(peat.getName(), 1), 1.5f);
         FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(veggie.getName(), 1), 1.5f);
     }
-    
+
     public void registerFluids() {
         PfF.Proxy.print("Setting up fluids...");
         //------------------------------------------------------

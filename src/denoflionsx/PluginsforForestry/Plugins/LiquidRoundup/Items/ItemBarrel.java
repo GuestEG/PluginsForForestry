@@ -1,12 +1,16 @@
 package denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items;
 
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.PluginLR;
+import denoflionsx.denLib.NewConfig.ConfigField;
 import net.minecraft.item.ItemStack;
 
 public class ItemBarrel extends ItemContainerBase {
 
-    public ItemBarrel(int itemID, int capacity, String unloc, String tag, String icon) {
-        super(itemID, capacity, unloc, tag, icon);
+    @ConfigField(category = "barrel")
+    public static int barrel_capacity = 10000;
+
+    public ItemBarrel(int itemID) {
+        super(itemID, barrel_capacity, "item.pff.barrel.name", "barrel", "barrel");
         PluginLR.stacks.put("barrel", new ItemStack(this));
     }
 }

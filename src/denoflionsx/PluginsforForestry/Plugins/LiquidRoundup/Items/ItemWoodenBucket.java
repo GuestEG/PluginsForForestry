@@ -1,6 +1,7 @@
 package denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items;
 
 import denoflionsx.PluginsforForestry.Core.PfF;
+import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.client.IconConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +18,8 @@ public class ItemWoodenBucket extends ItemContainerBase {
 
     public static Class forgeLiquid;
 
-    public ItemWoodenBucket(int itemID, int capacity, String unloc, String tag, String icon) {
-        super(itemID, capacity, unloc, tag, icon);
+    public ItemWoodenBucket(int itemID) {
+        super(itemID, 1000, "item.pff.woodenbucket.name", "woodenBucket", IconConstants.woodenBucket);
         this.setIsBucket(true);
     }
 

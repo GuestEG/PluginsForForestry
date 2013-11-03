@@ -2,10 +2,10 @@ package denoflionsx.PluginsforForestry.Plugins.MFR;
 
 import cpw.mods.fml.common.Loader;
 import denoflionsx.PluginsforForestry.API.Plugin.IPfFPlugin;
-import denoflionsx.PluginsforForestry.Config.PfFTuning;
 import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.PluginsforForestry.ModAPIWrappers.Forestry;
-import denoflionsx.PluginsforForestry.Recipe.IRegisterRecipe;
+import denoflionsx.denLib.Mod.denLibMod;
+import denoflionsx.denLib.NewConfig.ConfigField;
 import java.lang.reflect.Field;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -14,10 +14,13 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraftforge.common.Property;
 
-public class PluginMFR implements IPfFPlugin, IRegisterRecipe {
+public class PluginMFR implements IPfFPlugin {
 
-    ItemStack portaSpawner;
-    Item poopFrame;
+    private ItemStack portaSpawner;
+    @ConfigField(category = "MFR.features")
+    public static boolean MFRToForestryFertilizer = true;
+    @ConfigField(category = "MFR.features")
+    public static boolean recipeReplacement_MFR_PortableSpawner = false;
 
     @Override
     public void onPreLoad() {
@@ -34,20 +37,10 @@ public class PluginMFR implements IPfFPlugin, IRegisterRecipe {
         }
         recipeReplacement();
         apatite();
-        bees();
-    }
-
-    private void bees() {
-//        try {
-//            if (Loader.isModLoaded("Forestry")) {
-//                poopFrame = (Item) Class.forName("denoflionsx.PluginsforForestry.Plugins.MFR.BeeAddon.Frames.ItemFrameBase").newInstance();
-//            }
-//        } catch (Throwable ex) {
-//        }
     }
 
     private void apatite() {
-        if (PfFTuning.getBool(PfFTuning.MFR.ForestryFertilizerFromMFRFertilizer)) {
+        if (MFRToForestryFertilizer) {
             try {
                 ItemStack fert;
                 fert = new ItemStack((Item) Class.forName("powercrystals.minefactoryreloaded.MineFactoryReloadedCore").getField("fertilizerItem").get(null));
@@ -66,10 +59,10 @@ public class PluginMFR implements IPfFPlugin, IRegisterRecipe {
             Property p = (Property) Class.forName("powercrystals.minefactoryreloaded.setup.MFRConfig").getField("vanillaRecipes").get(null);
             if (!p.getBoolean(true)) {
                 PfF.Proxy.print("MFR Recipe mode is not set to vanilla. Force disabling all recipe replacements.");
-                PfFTuning.RecipeReplacement.recipeReplacement_MFR_PortableSpawner = String.valueOf(false);
+                recipeReplacement_MFR_PortableSpawner = false;
                 return;
             }
-            if (!PfFTuning.getBool(PfFTuning.RecipeReplacement.recipeReplacement_MFR_PortableSpawner)) {
+            if (!recipeReplacement_MFR_PortableSpawner) {
                 return;
             }
             portaSpawner = new ItemStack((Item) Class.forName("powercrystals.minefactoryreloaded.MineFactoryReloadedCore").getField("portaSpawnerItem").get(null));
@@ -97,15 +90,10 @@ public class PluginMFR implements IPfFPlugin, IRegisterRecipe {
             }
             if (instance != null) {
                 CraftingManager.getInstance().getRecipeList().remove(instance);
-                this.registerRecipe();
+                PfF.Proxy.registerRecipe(portaSpawner, new Object[]{"gGg", "DED", "gGg", Character.valueOf('g'), Item.ingotGold, Character.valueOf('G'), Block.glass, Character.valueOf('D'), Item.diamond, Character.valueOf('E'), Item.enderPearl});
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            denLibMod.error(this.getClass().getName(), "recipeReplacement", ex);
         }
-    }
-
-    @Override
-    public void registerRecipe() {
-        PfF.Proxy.registerRecipe(portaSpawner, new Object[]{"gGg", "DED", "gGg", Character.valueOf('g'), Item.ingotGold, Character.valueOf('G'), Block.glass, Character.valueOf('D'), Item.diamond, Character.valueOf('E'), Item.enderPearl});
     }
 }

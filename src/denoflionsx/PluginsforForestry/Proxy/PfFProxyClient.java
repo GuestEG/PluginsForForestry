@@ -23,14 +23,6 @@ public class PfFProxyClient extends PfFProxy {
     }
 
     @Override
-    public void registerClientSide() {
-    }
-
-    @Override
-    public void registerRenderable(Object o) {
-    }
-
-    @Override
     public String getIconCode(Icon icon) {
         try {
             String t = icon.getIconName();

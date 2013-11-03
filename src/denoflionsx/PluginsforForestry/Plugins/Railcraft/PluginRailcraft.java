@@ -2,7 +2,7 @@ package denoflionsx.PluginsforForestry.Plugins.Railcraft;
 
 import cpw.mods.fml.common.Loader;
 import denoflionsx.PluginsforForestry.API.Plugin.IPfFPlugin;
-import denoflionsx.PluginsforForestry.Config.PfFTuning;
+import denoflionsx.PluginsforForestry.Config.ItemNameBridge;
 import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.PluginsforForestry.ModAPIWrappers.Forestry;
 import denoflionsx.PluginsforForestry.Plugins.Railcraft.Items.ItemCustomCoke;
@@ -10,25 +10,35 @@ import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
 import denoflionsx.denLib.Lib.denLib;
 import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
 import denoflionsx.denLib.Mod.Handlers.IDictionaryListener;
-import denoflionsx.denLib.Mod.Handlers.WorldHandler.IdenWorldEventHandler;
-import denoflionsx.denLib.Mod.Handlers.WorldHandler.WorldEventHandler;
+import denoflionsx.denLib.Mod.Handlers.NewWorldHandler.IDenLibWorldHandler;
 import denoflionsx.denLib.Mod.denLibMod;
 import denoflionsx.denLib.NewConfig.ConfigField;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PluginRailcraft implements IPfFPlugin, IdenWorldEventHandler, IDictionaryListener {
+public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDictionaryListener {
 
-    public static Item itemCharCoke;
+    public static ItemCustomCoke itemCharCoke;
     public static FluidStack creosote;
-    @ConfigField(category = "railcraft.fermenter")
+    @ConfigField(category = "railcraft.features")
     public static boolean creosote_fermentation = false;
+    @ConfigField(category = "railcraft.features")
+    public static boolean solidFuels_enabled = true;
+    //--
+    @ConfigField(category = "railcraft.features")
+    public static boolean CreosoteOilForImpregnatedSticks = true;
+    @ConfigField(category = "railcraft.features")
+    public static boolean CreosoteOilForImpregnatedCasings = true;
+    @ConfigField(category = "railcraft.creosote", comment = "This takes Sengir's seed oil value and multiplies it to get the Creosote value.")
+    public static int CreosoteOilForImpregnatedSticks_Multiplier = 4;
+    @ConfigField(category = "railcraft.creosote", comment = "This takes Sengir's seed oil value and multiplies it to get the Creosote value.")
+    public static int CreosoteOilForImpregnatedCasings_Multiplier = 4;
 
     @Override
     public void onPreLoad() {
@@ -47,9 +57,9 @@ public class PluginRailcraft implements IPfFPlugin, IdenWorldEventHandler, IDict
     @Override
     public void onLoad() {
         if (Loader.isModLoaded("Railcraft")) {
-            if (PfFTuning.getInt(PfFTuning.Railcraft.plugin_railcraft_charcoal) > 0) {
-                itemCharCoke = new ItemCustomCoke(PfFTuning.getInt(PfFTuning.Railcraft.plugin_railcraft_charcoal));
-                PfF.Proxy.ItemCollections.add(this.getClass());
+            if (solidFuels_enabled) {
+                itemCharCoke = (ItemCustomCoke) ItemNameBridge.registerItem("PfF:coke", ItemCustomCoke.class);
+                itemCharCoke.registerRecipe();
             }
         }
     }
@@ -61,22 +71,21 @@ public class PluginRailcraft implements IPfFPlugin, IdenWorldEventHandler, IDict
             if (creosote == null) {
                 PfF.Proxy.severe("Creosote oil not found!");
             }
-            if (PfFTuning.getBool(PfFTuning.Railcraft_.plugin_railcraft_CreosoteOilForImpregnatedSticks)) {
+            if (CreosoteOilForImpregnatedSticks) {
                 ItemStack impSticks = Forestry.items("stickImpregnated");
                 if (impSticks != null) {
                     impSticks.stackSize = 2;
-                    doCarpenter(impSticks, PfFTuning.getInt(PfFTuning.Railcraft_.plugin_railcraft_CreosoteOilForImpregnatedSticks_Amount));
+                    doCarpenter(impSticks, CreosoteOilForImpregnatedSticks_Multiplier);
                 }
             }
 
-            if (PfFTuning.getBool(PfFTuning.Railcraft_.plugin_railcraft_CreosoteOilForImpregnatedCasings)) {
+            if (CreosoteOilForImpregnatedCasings) {
                 ItemStack pregCase = Forestry.items("impregnatedCasing");
                 if (pregCase != null) {
-                    doCarpenter(pregCase, PfFTuning.getInt(PfFTuning.Railcraft_.plugin_railcraft_CreosoteOilForImpregnatedCasings_Amount));
+                    doCarpenter(pregCase, CreosoteOilForImpregnatedCasings_Multiplier);
                 }
             }
-
-            WorldEventHandler.registerHandler(this);
+            denLibMod.worldHandler.registerHandler(this);
         }
     }
 
@@ -96,11 +105,12 @@ public class PluginRailcraft implements IPfFPlugin, IdenWorldEventHandler, IDict
             if (RecipeManager != null && Recipe != null && Shaped != null) {
                 ArrayList<Object> list = (ArrayList<Object>) RecipeManager.getField("recipes").get(null);
                 ArrayList<Object> myList = new ArrayList();
-                FluidStack oil = denLib.LiquidStackUtils.getNewStackCapacity(creosote, liquidAmount);
                 for (Object o : list) {
                     ItemStack i = (ItemStack) Recipe.getMethod("getCraftingResult", new Class[0]).invoke(o, new Object[0]);
                     if (i.isItemEqual(item)) {
                         // Recipe found!
+                        FluidStack l = (FluidStack) Recipe.getMethod("getLiquid", new Class[0]).invoke(o, new Object[0]);
+                        FluidStack oil = denLib.LiquidStackUtils.getNewStackCapacity(creosote, l.amount * liquidAmount);
                         Field temp = Recipe.getDeclaredField("internal");
                         temp.setAccessible(true);
                         Object internal = temp.get(o);
@@ -121,15 +131,11 @@ public class PluginRailcraft implements IPfFPlugin, IdenWorldEventHandler, IDict
     }
 
     @Override
-    public void onWorldLoaded() {
+    public void onWorldLoaded(World world) {
         FluidStack copy = denLib.LiquidStackUtils.getNewStackCapacity(creosote, 1);
         if (PluginRailcraft.creosote_fermentation) {
             FermenterUtils.registerFermenterBooster(copy, 1.5f);
         }
-        WorldEventHandler.unregisterHandler(this);
-    }
-
-    @Override
-    public void onWorldEnded() {
+        denLibMod.worldHandler.removeHandler(this);
     }
 }

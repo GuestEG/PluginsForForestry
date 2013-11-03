@@ -1,14 +1,10 @@
 package denoflionsx.PluginsforForestry.ModAPIWrappers;
 
-import denoflionsx.PluginsforForestry.Dictionary.Liquids.Engines.EngineFuel;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils.FermenterRecipe;
 import forestry.api.core.BlockInterface;
 import forestry.api.core.ItemInterface;
-import forestry.api.fuels.EngineBronzeFuel;
-import forestry.api.fuels.FuelManager;
 import forestry.api.recipes.RecipeManagers;
-import java.util.ArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -41,32 +37,6 @@ public class Forestry {
     public static ItemStack block(String name) {
         try {
             return BlockInterface.getBlock(name);
-        } catch (NoClassDefFoundError ex) {
-        }
-        return null;
-    }
-
-    public static void biogas(EngineFuel fuel, int safety) {
-        try {
-            if (FuelManager.bronzeEngineFuel != null) {
-                FuelManager.bronzeEngineFuel.put(fuel.getFluid(), new EngineBronzeFuel(fuel.getFluid(), fuel.getMJt(), fuel.getBurnTime(), safety));
-            }
-        } catch (NoClassDefFoundError ex) {
-        }
-    }
-
-    public static ArrayList<EngineFuel> getFuelMap() {
-        try {
-            ArrayList<EngineFuel> f = new ArrayList();
-            if (FuelManager.bronzeEngineFuel != null) {
-                for (EngineBronzeFuel value : FuelManager.bronzeEngineFuel.values()) {
-                    if (value.dissipationMultiplier == 1) {
-                        EngineFuel fuel = new EngineFuel(value.liquid.getName(), value.powerPerCycle, value.burnDuration);
-                        f.add(fuel);
-                    }
-                }
-            }
-            return f;
         } catch (NoClassDefFoundError ex) {
         }
         return null;

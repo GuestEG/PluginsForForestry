@@ -14,17 +14,11 @@ public interface IPfFProxy {
     
     public void severe(String msg);
     
-    public void registerRenderable(Object o);
-    
-    public void registerClientSide();
-    
     public void registerRecipe(ItemStack i, Object[] o);
     
     public void registerShapelessRecipe(ItemStack i, ItemStack[] stacks);
     
     public void registerOreRecipe(ItemStack i, Object[] o);
-    
-    public void registerAllRecipes();
     
     public void sendMessageToPlayer(String msg);
     
