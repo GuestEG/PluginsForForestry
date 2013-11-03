@@ -1,6 +1,7 @@
 package denoflionsx.PluginsforForestry.Net;
 
 import com.google.common.collect.BiMap;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -17,7 +18,7 @@ import net.minecraft.server.MinecraftServer;
 
 public class PfFConnectionHandler implements IConnectionHandler {
 
-    public static final boolean netDebug = true;
+    public static final boolean netDebug = false;
 
     public static String hashTheMap(BiMap<Integer, String> map) {
         String temp = "";
@@ -33,6 +34,7 @@ public class PfFConnectionHandler implements IConnectionHandler {
     @Override
     public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
         PfF.Proxy.print(PfFPacketHandler.getUserName(player) + " is logging in. Sending container maps...");
+
         PacketDispatcher.sendPacketToPlayer(PfFPacketHandler.PacketMaker.createSyncPacket(PfFPacketHandler.Packets.WoodenBucket_Sync.getId(), PluginLR.woodenBucket.getFluids(), !netDebug, hashTheMap(PluginLR.woodenBucket.getFluids())), player);
         PacketDispatcher.sendPacketToPlayer(PfFPacketHandler.PacketMaker.createSyncPacket(PfFPacketHandler.Packets.Barrel_Sync.getId(), PluginLR.barrel.getFluids(), !netDebug, hashTheMap(PluginLR.barrel.getFluids())), player);
     }
@@ -52,6 +54,16 @@ public class PfFConnectionHandler implements IConnectionHandler {
 
     @Override
     public void connectionClosed(INetworkManager manager) {
+        if (FMLCommonHandler.instance().getSide().isClient()) {
+            //-------------------------------------------------------------------------------------------------------------------------------------
+            // Re-read map files to make sure they are freshly set on clients if they go from SMP -> SP.
+            // Normal syncing mechanism should fix the rest of the data.
+            //-------------------------------------------------------------------------------------------------------------------------------------
+            PluginLR.woodenBucket.setFluids(denLib.FileUtils.readBiMapFromFile(PfF.core.getMappingFile(PluginLR.woodenBucket.getContainerTag())));
+            PluginLR.barrel.setFluids(denLib.FileUtils.readBiMapFromFile(PfF.core.getMappingFile(PluginLR.barrel.getContainerTag())));
+            PfF.Proxy.print("Restored local container maps.");
+            //--------------------------------------------------------------------------------------------------------------------------------------
+        }
     }
 
     @Override
