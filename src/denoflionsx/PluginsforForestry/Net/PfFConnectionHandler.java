@@ -55,14 +55,9 @@ public class PfFConnectionHandler implements IConnectionHandler {
     @Override
     public void connectionClosed(INetworkManager manager) {
         if (FMLCommonHandler.instance().getSide().isClient()) {
-            //-------------------------------------------------------------------------------------------------------------------------------------
-            // Re-read map files to make sure they are freshly set on clients if they go from SMP -> SP.
-            // Normal syncing mechanism should fix the rest of the data.
-            //-------------------------------------------------------------------------------------------------------------------------------------
-            PluginLR.woodenBucket.setFluids(denLib.FileUtils.readBiMapFromFile(PfF.core.getMappingFile(PluginLR.woodenBucket.getContainerTag())));
-            PluginLR.barrel.setFluids(denLib.FileUtils.readBiMapFromFile(PfF.core.getMappingFile(PluginLR.barrel.getContainerTag())));
+            ContainerPlayerBackup.restore(PluginLR.woodenBucket, ContainerPlayerBackup.bucket);
+            ContainerPlayerBackup.restore(PluginLR.barrel, ContainerPlayerBackup.barrel);
             PfF.Proxy.print("Restored local container maps.");
-            //--------------------------------------------------------------------------------------------------------------------------------------
         }
     }
 

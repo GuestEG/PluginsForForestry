@@ -233,4 +233,76 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
         }
         denLibMod.worldHandler.removeHandler(this);
     }
+
+    public String getUnloc() {
+        return unloc;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public ArrayList<Fluid> getFluidCache() {
+        return fluidCache;
+    }
+
+    public HashMap<Integer, ItemStack> getFilledMap() {
+        return filledMap;
+    }
+
+    public ArrayList<ItemStack> getStacks() {
+        return stacks;
+    }
+
+    public ItemStack getEmpty() {
+        return empty;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public Icon getOverlay() {
+        return overlay;
+    }
+
+    public String[] getIconStrings() {
+        return iconStrings;
+    }
+
+    public HashMap<Integer, Integer> getColorMapMeta() {
+        return colorMapMeta;
+    }
+
+    public void setFluidCache(ArrayList<Fluid> fluidCache) {
+        this.fluidCache = fluidCache;
+    }
+
+    public void setFilledMap(HashMap<Integer, ItemStack> filledMap) {
+        this.filledMap = filledMap;
+    }
+
+    public void setStacks(ArrayList<ItemStack> stacks) {
+        this.stacks = stacks;
+    }
+
+    public void setEmpty(ItemStack empty) {
+        this.empty = empty;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setOverlay(Icon overlay) {
+        this.overlay = overlay;
+    }
+
+    public void setIconStrings(String[] iconStrings) {
+        this.iconStrings = iconStrings;
+    }
+
+    public void setColorMapMeta(HashMap<Integer, Integer> colorMapMeta) {
+        this.colorMapMeta = colorMapMeta;
+    }
 }
