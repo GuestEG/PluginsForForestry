@@ -8,17 +8,12 @@ import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Fluid.FluidIconHandl
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Fluid.PfFFluid;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.BarrelRecipeManager;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemBarrel;
-import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemContainerBase;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemHammer;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemRings;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.ItemWoodenBucket;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
-import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
-import denoflionsx.denLib.Mod.Handlers.IDictionaryListener;
-import denoflionsx.denLib.Mod.Handlers.NewWorldHandler.IDenLibWorldHandler;
 import denoflionsx.denLib.Mod.denLibMod;
 import denoflionsx.denLib.NewConfig.ConfigField;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import net.minecraft.block.Block;
@@ -36,7 +31,6 @@ public class PluginLR implements IPfFPlugin {
     public static Item hammer;
     public static Item rings;
     public static HashMap<String, ItemStack> stacks = new HashMap();
-    public static Fluid veggie;
     public static Fluid peat;
     public static FluidIconHandler iconHandler;
     //-----------------------------------------
@@ -75,23 +69,11 @@ public class PluginLR implements IPfFPlugin {
 
     @Override
     public void onPostLoad() {
-        try {
-            Class c = this.getClass();
-            for (Field f : c.getDeclaredFields()) {
-                Object o = f.get(null);
-                if (o != null) {
-                    if (o instanceof ItemContainerBase) {
-                        denLibMod.DictionaryHandler.registerListener((IDictionaryListener) o, DictionaryHandler.channels.FLUID);
-                        denLibMod.worldHandler.registerHandler((IDenLibWorldHandler) o);
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-
+        denLibMod.fluids.register(woodenBucket);
+        denLibMod.worldHandler.registerHandler(woodenBucket);
+        denLibMod.fluids.register(barrel);
+        denLibMod.worldHandler.registerHandler(barrel);
         FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(peat.getName(), 1), 1.5f);
-        FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(veggie.getName(), 1), 1.5f);
     }
 
     public void registerFluids() {
@@ -100,14 +82,10 @@ public class PluginLR implements IPfFPlugin {
         // Init
         //------------------------------------------------------
         peat = new PfFFluid("peat", 0xFF4D2C02);
-        //melon = new PfFFluid("melon");
-        veggie = new PfFFluid("vegetable", 0xFFFF2131);
         //-------------------------------------------------------
         // Localization
         //-------------------------------------------------------
         peat.setUnlocalizedName("liquid.pff.liquidpeat.name");
-        //melon.setUnlocalizedName("liquid.pff.melonjuice.name");
-        veggie.setUnlocalizedName("liquid.pff.veggiejuice.name");
         //-------------------------------------------------------
         // Icons
         //-------------------------------------------------------
@@ -116,8 +94,6 @@ public class PluginLR implements IPfFPlugin {
         // Register
         //-------------------------------------------------------
         FluidRegistry.registerFluid(peat);
-        //FluidRegistry.registerFluid(melon);
-        FluidRegistry.registerFluid(veggie);
         //-------------------------------------------------------
     }
 }

@@ -15,7 +15,7 @@ import denoflionsx.PluginsforForestry.Net.PfFPacketHandler;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.PluginLR;
 import denoflionsx.PluginsforForestry.Utils.PfFLib;
 import denoflionsx.denLib.Lib.denLib;
-import denoflionsx.denLib.Mod.Handlers.IDictionaryListener;
+import denoflionsx.denLib.Mod.Handlers.NewFluidHandler.IDenLibFluidHandler;
 import denoflionsx.denLib.Mod.Handlers.NewWorldHandler.IDenLibWorldHandler;
 import denoflionsx.denLib.Mod.denLibMod;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ItemContainerBase extends Item implements IPfFContainer, IDictionaryListener, IDenLibWorldHandler {
+public class ItemContainerBase extends Item implements IPfFContainer, IDenLibFluidHandler, IDenLibWorldHandler {
 
     private String unloc;
     private String tag;
@@ -116,8 +116,7 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
     }
 
     @Override
-    public void onEvent(String tag, short channel, Object o) {
-        FluidStack f = new FluidStack((Fluid) o, this.capacity);
+    public void onEvent(FluidStack f) {
         fluidCache.add(f.getFluid());
         doMapping(f, false);
     }
@@ -239,6 +238,11 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDictionar
             PfF.Proxy.print("Not saving mappings file for " + this.tag + " due to server-side syncing.");
         }
         denLibMod.worldHandler.removeHandler(this);
+    }
+
+    @Override
+    public String lookingForFluid() {
+        return null;
     }
 
     public String getUnloc() {

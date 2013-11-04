@@ -4,12 +4,11 @@ import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.PluginLR;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class BarrelRecipeManager {
 
     public final void hammer() {
-        PfF.Proxy.registerOreRecipe(PluginLR.stacks.get("hammer"), new Object[]{"XiX", "III", "XSX", Character.valueOf('i'), new ItemStack(Item.dyePowder), Character.valueOf('I'), Item.ingotIron, Character.valueOf('S'), "stickWood"});
+        PfF.Proxy.registerOreRecipe(PluginLR.stacks.get("hammer"), new Object[]{"XiX", "III", "XSX", Character.valueOf('i'), "dyeBlack", Character.valueOf('I'), Item.ingotIron, Character.valueOf('S'), "stickWood"});
     }
 
     public final void rings() {

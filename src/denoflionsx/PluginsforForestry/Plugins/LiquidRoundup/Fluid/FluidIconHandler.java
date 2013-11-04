@@ -22,7 +22,6 @@ public class FluidIconHandler {
     public void onTexture(TextureStitchEvent.Pre event) {
         if (event.map.textureType == BLOCK) {
             this.setupIcon(PluginLR.peat, event, new String[]{"peat.flowing", "peat.still"});
-            this.setupIcon(PluginLR.veggie, event, new String[]{"vegetable.flowing", "vegetable.still"});
         }
     }
 

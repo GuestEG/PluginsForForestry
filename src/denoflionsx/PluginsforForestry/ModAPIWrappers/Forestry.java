@@ -5,6 +5,8 @@ import denoflionsx.PluginsforForestry.Utils.FermenterUtils.FermenterRecipe;
 import forestry.api.core.BlockInterface;
 import forestry.api.core.ItemInterface;
 import forestry.api.recipes.RecipeManagers;
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,8 +32,27 @@ public class Forestry {
             if (RecipeManagers.squeezerManager != null) {
                 RecipeManagers.squeezerManager.addRecipe(time, grid, f);
             }
-        } catch (NoClassDefFoundError ex) {
+        } catch (Throwable ex) {
+            ex.printStackTrace();
         }
+    }
+
+    public static boolean doesHaveExistingRecipe(ItemStack crop) {
+        try {
+            Class Squeezer = Class.forName("forestry.factory.gadgets.MachineSqueezer");
+            Class RecipeManager = null;
+            for (Class c : Squeezer.getDeclaredClasses()) {
+                if (Pattern.compile("$", Pattern.LITERAL).split(c.getName())[1].equals("RecipeManager")) {
+                    RecipeManager = c;
+                }
+            }
+            Method findMatch = RecipeManager.getDeclaredMethod("findMatchingRecipe", new Class[]{ItemStack[].class});
+            Object o = findMatch.invoke(null, new Object[]{new ItemStack[]{crop}});
+            return o != null;
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return true;
     }
 
     public static ItemStack block(String name) {
@@ -55,7 +76,7 @@ public class Forestry {
         try {
             for (String s : FermenterUtils.forestryFermenterBoosters) {
                 FluidStack in = FluidRegistry.getFluidStack(s, 1);
-                if (in != null){
+                if (in != null) {
                     RecipeManagers.fermenterManager.addRecipe(i, amount, 1.5f, in, FermenterUtils.biomass);
                 }
             }
