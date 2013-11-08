@@ -94,6 +94,5 @@ public class PluginLR implements IPfFPlugin {
         // Register
         //-------------------------------------------------------
         FluidRegistry.registerFluid(peat);
-        //-------------------------------------------------------
     }
 }

@@ -12,7 +12,6 @@ public class PfFCore{
     public File mappingsDir;
     public File configDir;
     private File sourceFile;
-    private String updatedUrl;
     
     public PfFCore(File sourceFile) {
         this.sourceFile = sourceFile;
