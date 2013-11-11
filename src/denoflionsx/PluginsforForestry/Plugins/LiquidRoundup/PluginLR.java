@@ -4,6 +4,7 @@ import denoflionsx.PluginsforForestry.API.PfFAPI;
 import denoflionsx.PluginsforForestry.API.Plugin.IPfFPlugin;
 import denoflionsx.PluginsforForestry.Config.ItemNameBridge;
 import denoflionsx.PluginsforForestry.Core.PfF;
+import denoflionsx.PluginsforForestry.ModAPIWrappers.Forestry;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Fluid.FluidIconHandler;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Fluid.PfFFluid;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.Items.BarrelRecipeManager;
@@ -21,9 +22,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 public class PluginLR implements IPfFPlugin {
-
+    
     public static HashMap<String, ArrayList<String>> blackLists = new HashMap();
     //-----
     public static ItemWoodenBucket woodenBucket;
@@ -38,13 +40,13 @@ public class PluginLR implements IPfFPlugin {
     public static boolean barrel_enabled = true;
     @ConfigField(category = "features")
     public static boolean woodenBucket_enabled = true;
-
+    
     @Override
     public void onPreLoad() {
         PfFAPI.sendBlacklistRequest("woodenBucket", FluidRegistry.LAVA.getName());
         PfFAPI.sendBlacklistRequest("barrel", FluidRegistry.LAVA.getName());
     }
-
+    
     @Override
     public void onLoad() {
         this.registerFluids();
@@ -66,7 +68,7 @@ public class PluginLR implements IPfFPlugin {
             barrelRecipes.rings();
         }
     }
-
+    
     @Override
     public void onPostLoad() {
         denLibMod.fluids.register(woodenBucket);
@@ -75,7 +77,7 @@ public class PluginLR implements IPfFPlugin {
         denLibMod.worldHandler.registerHandler(barrel);
         FermenterUtils.registerFermenterBooster(FluidRegistry.getFluidStack(peat.getName(), 1), 1.5f);
     }
-
+    
     public void registerFluids() {
         PfF.Proxy.print("Setting up fluids...");
         //------------------------------------------------------
@@ -94,5 +96,6 @@ public class PluginLR implements IPfFPlugin {
         // Register
         //-------------------------------------------------------
         FluidRegistry.registerFluid(peat);
+        Forestry.squeezer(5, new ItemStack[]{Forestry.items("peat")}, new FluidStack(peat, 250));
     }
 }
