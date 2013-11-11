@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemCustomCoke extends ItemMeta implements IFuelHandler {
-    
+
     @ConfigField(category = "railcraft.charcoal")
     public static int charcoal_smelttime = (3000 / 4);
     @ConfigField(category = "railcraft.charcoal")
@@ -31,7 +31,7 @@ public class ItemCustomCoke extends ItemMeta implements IFuelHandler {
     public static int coke_cactus_burn = 800;
     @ConfigField(category = "railcraft.charcoal")
     public static int creosote_amount = 30;
-    
+
     public ItemCustomCoke(int par1) {
         super(par1);
         fuels.sugar_charcoal.setBurn(charcoal_sugar_burn);
@@ -44,19 +44,19 @@ public class ItemCustomCoke extends ItemMeta implements IFuelHandler {
         fuels.cactus_coke.setBurn(coke_cactus_burn);
         fuels.cactus_coke.setStack(new ItemStack(this, 1, fuels.cactus_coke.ordinal()));
     }
-    
+
     @Override
     public CreativeTabs getCreativeTab() {
         return PfFAPI.tab;
     }
-    
+
     @Override
     public void registerIcons(IconRegister par1IconRegister) {
         for (fuels f : fuels.values()) {
             this.icons.put(f.ordinal(), par1IconRegister.registerIcon(f.getTexture()));
         }
     }
-    
+
     @Override
     public int getBurnTime(ItemStack fuel) {
         for (fuels f : fuels.values()) {
@@ -66,7 +66,7 @@ public class ItemCustomCoke extends ItemMeta implements IFuelHandler {
         }
         return 0;
     }
-    
+
     public void registerRecipe() {
         ItemStack coalCoke = GameRegistry.findItemStack("Railcraft", "railcraft.fuel.coke", 1);
         FluidStack s = denLib.LiquidStackUtils.getNewStackCapacity(PluginRailcraft.creosote, creosote_amount);
@@ -103,43 +103,43 @@ public class ItemCustomCoke extends ItemMeta implements IFuelHandler {
         }
         GameRegistry.registerFuelHandler(this);
     }
-    
+
     public static enum fuels {
-        
-        sugar_charcoal("item.pff.sugarcharcoal.name", "PluginsForForestry:railcraft/sugar_charcoal".toLowerCase()),
-        sugar_coke("item.pff.sugarcoke.name", "PluginsForForestry:railcraft/sugar_coke".toLowerCase()),
-        cactus_charcoal("item.pff.cactuscharcoal.name", "PluginsForForestry:railcraft/cactus_charcoal".toLowerCase()),
-        cactus_coke("item.pff.cactuscoke.name", "PluginsForForestry:railcraft/cactus_coke".toLowerCase());
+
+        sugar_charcoal("item_sugar_charcoal", "PluginsForForestry:railcraft/sugar_charcoal".toLowerCase()),
+        sugar_coke("item_sugar_coke", "PluginsForForestry:railcraft/sugar_coke".toLowerCase()),
+        cactus_charcoal("item_cactus_charcoal", "PluginsForForestry:railcraft/cactus_charcoal".toLowerCase()),
+        cactus_coke("item_cactus_coke", "PluginsForForestry:railcraft/cactus_coke".toLowerCase());
         private String unlocalized;
         private String texture;
         private ItemStack stack;
         private int burn;
-        
+
         private fuels(String unlocalized, String texture) {
             this.unlocalized = unlocalized;
             this.texture = texture;
         }
-        
+
         public String getUnlocalized() {
             return unlocalized;
         }
-        
+
         public String getTexture() {
             return texture;
         }
-        
+
         public ItemStack getStack() {
             return stack;
         }
-        
+
         public void setStack(ItemStack stack) {
             this.stack = stack;
         }
-        
+
         public int getBurn() {
             return burn;
         }
-        
+
         public void setBurn(int burn) {
             this.burn = burn;
         }
