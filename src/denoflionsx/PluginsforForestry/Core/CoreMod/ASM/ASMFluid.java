@@ -10,15 +10,21 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
 public class ASMFluid implements IClassTransformer, Opcodes {
-
+    
     public ASMFluid() {
     }
-
+    
     @Override
     public byte[] transform(String string, String string1, byte[] bytes) {
         if (string.equals("net.minecraftforge.fluids.FluidContainerRegistry")) {
-            PfFCoreMod.print("Injecting hook into " + string);
-            return injectHook(bytes);
+            if (!PfFCoreMod.runtimeDeobfEnabled) {
+                // Assuming your env is like mine and already has this patch installed directly in the source.
+                // If this is a problem someone tell me and I'll fix it properly.
+                PfFCoreMod.print("runtimeDeobf is not enabled. Not patching " + string);
+            } else {
+                PfFCoreMod.print("Injecting hook into " + string);
+                return injectHook(bytes);
+            }
         }
         return bytes;
     }

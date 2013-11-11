@@ -10,7 +10,7 @@ public class ItemBarrel extends ItemContainerBase {
     public static int barrel_capacity = 10000;
 
     public ItemBarrel(int itemID) {
-        super(itemID, barrel_capacity, "item.pff.barrel.name", "barrel", "barrel");
+        super(itemID, barrel_capacity, "item_barrel", "barrel", "barrel");
         PluginLR.stacks.put("barrel", new ItemStack(this));
     }
 }

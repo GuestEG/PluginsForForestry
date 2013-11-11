@@ -8,18 +8,18 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class Spring extends HolidayObject {
-    
+
     private HashMap<Integer, String> iconMap = new HashMap();
-    
+
     public Spring() {
-        super("Spring", new DateObject(Calendar.APRIL).setWholeMonth(true), null, "item.pff.woodenbucket.spring.name");
+        super("Spring", new DateObject(Calendar.APRIL).setWholeMonth(true), null, "item_woodenbucket_spring");
         iconMap.put(0, "pink");
         iconMap.put(1, "orange");
         iconMap.put(2, "lavendar");
         iconMap.put(3, "green");
         iconMap.put(4, "blue");
     }
-    
+
     @Override
     public void setupHolidayContent() {
         try {

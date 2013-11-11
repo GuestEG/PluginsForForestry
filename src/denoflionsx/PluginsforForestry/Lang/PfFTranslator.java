@@ -2,48 +2,58 @@ package denoflionsx.PluginsforForestry.Lang;
 
 import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.denLib.Lib.denLib;
+import java.io.File;
 import java.util.HashMap;
 
 public class PfFTranslator {
 
     public static PfFTranslator instance;
     private static final String defaultLang = "en_US";
-    private boolean notify = false;
-    private HashMap<String, String> trans = null;
+    private static final HashMap<String, LangObject> trans = new HashMap();
 
     public static void createInstance() {
         instance = new PfFTranslator();
+        PfF.Proxy.print("STARTING LANG SETUP");
+        for (String s : denLib.FileUtils.getFileNamesInJar(PfF.source, ".lang")) {
+            try {
+                String[] split = s.split("/");
+                File outFile = new File(PfF.core.configDir, split[split.length - 1]);
+                if (!outFile.exists()) {
+                    denLib.FileUtils.extractFileFromJar(PfF.source, s, outFile);
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+        for (File f : PfF.core.configDir.listFiles()) {
+            if (!f.isDirectory()) {
+                if (f.getAbsolutePath().contains(".lang")) {
+                    LangObject o = new LangObject(f);
+                    o.loadTranslations();
+                    PfF.Proxy.print("Loaded language file " + f.getName());
+                    // Update Existing file.
+                    MasterLangEnum.load(o.getProp(), f);
+                    MasterLangEnum.update(o.getProp());
+                    MasterLangEnum.save(o.getProp(), f);
+                    trans.put(o.getTag(), o);
+                }
+            }
+        }
     }
 
     public String translateKey(String key) {
-        return this.translateKey(key, PfF.Proxy.getLang());
+        if (trans.containsKey(PfF.Proxy.getLang())) {
+            return trans.get(PfF.Proxy.getLang()).translate(key);
+        } else {
+            return translateKey(key, defaultLang);
+        }
     }
-    
-    public void overrideKey(String key, String overrideKey){
-        trans.put(key, this.translateKey(overrideKey));
+
+    public void overrideKey(String key, String overrideKey) {
+
     }
 
     public String translateKey(String key, String lang) {
-        if (trans == null) {
-            String[] p = denLib.StringUtils.readFileContentsAutomated(PfF.core.configDir, lang + ".lang", this);
-            if (p[0].equals(denLib.StringUtils.readError)) {
-                // No local available. Use default.
-                p = denLib.StringUtils.readFileContentsAutomated(PfF.core.configDir, defaultLang + ".lang", this);
-                if (!notify) {
-                    PfF.Proxy.warning("No localization data for language " + lang + ". Using en_US instead.");
-                    PfF.Proxy.print("Feel free to translate the en_US.lang file in the jar and submit it!");
-                    notify = true;
-                }
-            }
-            HashMap<String, String> l = new HashMap();
-            for (String a : p) {
-                String[] sp = a.split("=");
-                String key1 = denLib.StringUtils.removeSpaces(sp[0]);
-                String value1 = sp[1].trim();
-                l.put(key1, value1);
-            }
-            trans = l;
-        }
-        return trans.get(key);
+        return trans.get(lang).translate(key);
     }
 }

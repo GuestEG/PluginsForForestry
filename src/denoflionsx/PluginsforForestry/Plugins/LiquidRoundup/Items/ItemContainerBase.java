@@ -103,8 +103,8 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDenLibFlu
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister) {
-        this.itemIcon = par1IconRegister.registerIcon("@NAME@:".toLowerCase().concat(iconStrings[0]));
-        this.overlay = par1IconRegister.registerIcon("@NAME@:".toLowerCase().concat(iconStrings[1]));
+        this.itemIcon = par1IconRegister.registerIcon("PluginsForForestry:".toLowerCase().concat(iconStrings[0]));
+        this.overlay = par1IconRegister.registerIcon("PluginsForForestry:".toLowerCase().concat(iconStrings[1]));
     }
 
     @Override
@@ -165,6 +165,9 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDenLibFlu
         for (Fluid f : fluidCache) {
             FluidStack f1 = new FluidStack(f, this.capacity);
             this.doMapping(f1, flag);
+        }
+        for (ItemStack i : stacks){
+            i.getItem().setCreativeTab(PfFAPI.tab);
         }
         String local = PfFConnectionHandler.hashTheMap(fluids);
         if (local.equals(hash)) {

@@ -19,7 +19,7 @@ public class ItemWoodenBucket extends ItemContainerBase {
     public static Class forgeLiquid;
 
     public ItemWoodenBucket(int itemID) {
-        super(itemID, 1000, "item.pff.woodenbucket.name", "woodenBucket", IconConstants.woodenBucket);
+        super(itemID, 1000, "item_woodenbucket", "woodenBucket", IconConstants.woodenBucket);
         this.setIsBucket(true);
     }
 

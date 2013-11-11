@@ -26,7 +26,7 @@ public class FluidIconHandler {
     }
 
     public void setupIcon(Fluid f, TextureStitchEvent.Pre event, String[] texture) {
-        f.setFlowingIcon(event.map.registerIcon("@NAME@".toLowerCase().concat(":fluid/").concat(texture[0])));
-        f.setStillIcon(event.map.registerIcon("@NAME@".toLowerCase().concat(":fluid/").concat(texture[1])));
+        f.setFlowingIcon(event.map.registerIcon("PluginsForForestry".toLowerCase().concat(":fluid/").concat(texture[0])));
+        f.setStillIcon(event.map.registerIcon("PluginsForForestry".toLowerCase().concat(":fluid/").concat(texture[1])));
     }
 }

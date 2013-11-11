@@ -33,7 +33,7 @@ public class Forestry {
                 RecipeManagers.squeezerManager.addRecipe(time, grid, f);
             }
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
@@ -50,7 +50,7 @@ public class Forestry {
             Object o = findMatch.invoke(null, new Object[]{new ItemStack[]{crop}});
             return o != null;
         } catch (Throwable t) {
-            t.printStackTrace();
+            //t.printStackTrace();
         }
         return true;
     }

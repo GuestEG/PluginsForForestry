@@ -106,10 +106,10 @@ public class ItemCustomCoke extends ItemMeta implements IFuelHandler {
     
     public static enum fuels {
         
-        sugar_charcoal("item.pff.sugarcharcoal.name", "@NAME@:railcraft/sugar_charcoal".toLowerCase()),
-        sugar_coke("item.pff.sugarcoke.name", "@NAME@:railcraft/sugar_coke".toLowerCase()),
-        cactus_charcoal("item.pff.cactuscharcoal.name", "@NAME@:railcraft/cactus_charcoal".toLowerCase()),
-        cactus_coke("item.pff.cactuscoke.name", "@NAME@:railcraft/cactus_coke".toLowerCase());
+        sugar_charcoal("item.pff.sugarcharcoal.name", "PluginsForForestry:railcraft/sugar_charcoal".toLowerCase()),
+        sugar_coke("item.pff.sugarcoke.name", "PluginsForForestry:railcraft/sugar_coke".toLowerCase()),
+        cactus_charcoal("item.pff.cactuscharcoal.name", "PluginsForForestry:railcraft/cactus_charcoal".toLowerCase()),
+        cactus_coke("item.pff.cactuscoke.name", "PluginsForForestry:railcraft/cactus_coke".toLowerCase());
         private String unlocalized;
         private String texture;
         private ItemStack stack;

@@ -19,24 +19,28 @@ import denoflionsx.PluginsforForestry.Net.PfFPacketHandlerClient;
 import denoflionsx.PluginsforForestry.Net.PfFPacketHandlerCommon;
 import denoflionsx.PluginsforForestry.Proxy.PfFProxy;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
+import denoflionsx.denLib.Lib.denLib;
 import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
 import denoflionsx.denLib.Mod.denLibMod;
+import java.io.File;
 
-@Mod(modid = "@NAME@", name = "@NAME@", version = "@VERSION@", dependencies = "@DEPENDS@")
+@Mod(modid = "PluginsForForestry", name = "PluginsForForestry", version = "@VERSION@", dependencies = "required-after:denLib;after:MineFactoryReloaded;after:BuildCraft|Core;after:Forestry")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true,
-        clientPacketHandlerSpec =
-        @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerClient.class),
-        serverPacketHandlerSpec =
-        @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerCommon.class),
+        clientPacketHandlerSpec
+        = @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerClient.class),
+        serverPacketHandlerSpec
+        = @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerCommon.class),
         connectionHandler = PfFConnectionHandler.class)
 public class PfF {
 
-    @Mod.Instance("@NAME@")
-    public static Object instance;
-    @SidedProxy(clientSide = "@PROXYCLIENT@", serverSide = "@PROXYSERVER@")
+    public static final String proxyPath = "denoflionsx.PluginsforForestry.Proxy";
+    public static final String proxyClient = proxyPath + ".PfFProxyClient";
+    public static final String proxyCommon = proxyPath + ".PfFProxyCommon";
+    @SidedProxy(clientSide = proxyClient, serverSide = proxyCommon)
     public static PfFProxy Proxy;
     public static PfFCore core;
     public static final String channel = "PluginsFF";
+    public static File source;
 
     public PfF() {
         PfFAPI.plugins = new PfFPluginManager();
@@ -45,10 +49,14 @@ public class PfF {
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event) {
         PfFAPI.instance = this;
-        core = new PfFCore(event.getSourceFile());
+        core = new PfFCore();
+        source = event.getSourceFile();
+        if (source == null || source.getAbsolutePath().contains("minecraft.jar") || source.isDirectory()) {
+            source = denLib.FileUtils.findMeInMods(new File("./mods"), "PluginsForForestry");
+        }
         core.setupConfig(event);
         PfFTranslator.createInstance();
-        Proxy.findInternalAddons(event.getSourceFile());
+        Proxy.findInternalAddons(source);
         PfFAPI.plugins.runPluginLoadEvent(event);
         denLibMod.DictionaryHandler.registerListener(new FermenterUtils(), DictionaryHandler.channels.FLUID);
     }

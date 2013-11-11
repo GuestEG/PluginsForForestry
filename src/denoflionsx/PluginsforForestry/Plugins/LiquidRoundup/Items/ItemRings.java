@@ -15,9 +15,9 @@ public class ItemRings extends ItemMeta {
     public static int rings_steelBonusMultiplier = 2;
 
     public ItemRings(int par1) {
-        super(new String[]{"@NAME@".toLowerCase().concat(":iron_hoop")}, par1);
+        super(new String[]{"PluginsForForestry".toLowerCase().concat(":iron_hoop")}, par1);
         this.setCreativeTab(PfFAPI.tab);
-        this.createItemEntry(0, PfFTranslator.instance.translateKey("item.pff.rings.name"));
+        this.createItemEntry(0, PfFTranslator.instance.translateKey("item_rings"));
         PluginLR.stacks.put("rings", new ItemStack(this, rings_amountPerCraft, 0));
         PluginLR.stacks.put("ringsx", new ItemStack(this, rings_amountPerCraft * rings_steelBonusMultiplier, 0));
     }

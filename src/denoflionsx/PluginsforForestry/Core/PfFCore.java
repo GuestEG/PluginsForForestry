@@ -7,23 +7,23 @@ import denoflionsx.denLib.Mod.denLibMod;
 import java.io.*;
 import net.minecraftforge.common.Configuration;
 
-public class PfFCore{
+public class PfFCore {
     
+    // Slowing working on eliminating this object.
+
     public File mappingsDir;
     public File configDir;
-    private File sourceFile;
-    
-    public PfFCore(File sourceFile) {
-        this.sourceFile = sourceFile;
+
+    public PfFCore() {
     }
-    
+
     public void setupContainers() {
     }
-    
+
     public File getMappingFile(String name) {
         return PfF.Proxy.getMappingFile(name);
     }
-    
+
     public void setupConfig(FMLPreInitializationEvent event) {
         configDir = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/denoflionsx/PluginsforForestry/");
         PfFTuning.config = new Configuration(new File(configDir.getAbsolutePath() + "/PluginsforForestry.cfg"));
@@ -31,10 +31,10 @@ public class PfFCore{
         if (!mappingsDir.exists()) {
             mappingsDir.mkdirs();
         }
-        denLibMod.configManager.setup(sourceFile, new File(configDir.getAbsolutePath() + "/PluginsforForestry.cfg"));
+        denLibMod.configManager.setup(PfF.source, new File(configDir.getAbsolutePath() + "/PluginsforForestry.cfg"));
         ItemNameBridge.setupBridge(new File(mappingsDir, "ItemNameBridge.bin"));
     }
-    
+
     public void setupRendering() {
     }
 }

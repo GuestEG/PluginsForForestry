@@ -9,10 +9,10 @@ import net.minecraft.item.ItemStack;
 public class ItemHammer extends ItemMeta {
 
     public ItemHammer(int par1) {
-        super(new String[]{"@NAME@".toLowerCase().concat(":smithing_hammer")}, par1);
+        super(new String[]{"PluginsForForestry".toLowerCase().concat(":smithing_hammer")}, par1);
         this.setCreativeTab(PfFAPI.tab);
         this.setContainerItem(this);
-        this.createItemEntry(0, PfFTranslator.instance.translateKey("item.pff.hammer.name"));
+        this.createItemEntry(0, PfFTranslator.instance.translateKey("item_hammer"));
         PluginLR.stacks.put("hammer", new ItemStack(this));
     }
 }
