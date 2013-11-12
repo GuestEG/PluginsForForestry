@@ -2,31 +2,32 @@ package denoflionsx.PluginsforForestry.Utils;
 
 import denoflionsx.PluginsforForestry.Core.PfF;
 import denoflionsx.PluginsforForestry.ModAPIWrappers.Forestry;
-import denoflionsx.denLib.Mod.Handlers.IDictionaryListener;
+import denoflionsx.denLib.Mod.Handlers.NewFluidHandler.IDenLibFluidHandler;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FermenterUtils implements IDictionaryListener {
+public class FermenterUtils implements IDenLibFluidHandler {
 
     public static FluidStack biomass;
     public static final String[] forestryFermenterBoosters = new String[]{"juice", "honey", "water"};
 
     @Override
-    public void onEvent(String tag, short channel, Object o) {
-        if (tag.equals("biomass")) {
-            biomass = new FluidStack((Fluid) o, FluidContainerRegistry.BUCKET_VOLUME);
-        }
+    public String lookingForFluid() {
+        return "biomass";
     }
 
-    public static void registerFermentable(ItemStack item, int amount){
+    @Override
+    public void onEvent(FluidStack fluid) {
+        biomass = fluid;
+    }
+
+    public static void registerFermentable(ItemStack item, int amount) {
         Forestry.fermentable(item, amount);
     }
-    
+
     public static void registerFermenterBooster(FluidStack liquid, float bonus) {
         try {
             ArrayList<FermenterRecipe> r = new ArrayList();

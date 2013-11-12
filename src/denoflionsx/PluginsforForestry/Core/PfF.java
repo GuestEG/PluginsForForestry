@@ -20,7 +20,6 @@ import denoflionsx.PluginsforForestry.Net.PfFPacketHandlerCommon;
 import denoflionsx.PluginsforForestry.Proxy.PfFProxy;
 import denoflionsx.PluginsforForestry.Utils.FermenterUtils;
 import denoflionsx.denLib.Lib.denLib;
-import denoflionsx.denLib.Mod.Handlers.DictionaryHandler;
 import denoflionsx.denLib.Mod.denLibMod;
 import java.io.File;
 
@@ -32,7 +31,7 @@ import java.io.File;
         = @NetworkMod.SidedPacketHandler(channels = {PfF.channel}, packetHandler = PfFPacketHandlerCommon.class),
         connectionHandler = PfFConnectionHandler.class)
 public class PfF {
-
+    
     public static final String proxyPath = "denoflionsx.PluginsforForestry.Proxy";
     public static final String proxyClient = proxyPath + ".PfFProxyClient";
     public static final String proxyCommon = proxyPath + ".PfFProxyCommon";
@@ -41,11 +40,11 @@ public class PfF {
     public static PfFCore core;
     public static final String channel = "PluginsFF";
     public static File source;
-
+    
     public PfF() {
         PfFAPI.plugins = new PfFPluginManager();
     }
-
+    
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event) {
         PfFAPI.instance = this;
@@ -58,15 +57,15 @@ public class PfF {
         PfFTranslator.createInstance();
         Proxy.findInternalAddons(source);
         PfFAPI.plugins.runPluginLoadEvent(event);
-        denLibMod.DictionaryHandler.registerListener(new FermenterUtils(), DictionaryHandler.channels.FLUID);
+        denLibMod.fluids.register(new FermenterUtils());
     }
-
+    
     @EventHandler
     public void load(FMLInitializationEvent event) {
         core.setupContainers();
         PfFAPI.plugins.runPluginLoadEvent(event);
     }
-
+    
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent evt) {
         PfFAPI.plugins.runPluginLoadEvent(evt);
@@ -75,7 +74,7 @@ public class PfF {
         PfF.Proxy.print("This is PfF version " + "@VERSION@");
         PfFTuning.config.save();
     }
-
+    
     @EventHandler
     public void IMCCallback(IMCEvent event) {
         IMCHandler h = new IMCHandler();
