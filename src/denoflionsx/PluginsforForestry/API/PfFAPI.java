@@ -1,5 +1,4 @@
 package denoflionsx.PluginsforForestry.API;
-
 import denoflionsx.PluginsforForestry.API.Interfaces.IPfFContainer;
 import denoflionsx.PluginsforForestry.API.Plugin.IPfFPluginManager;
 import java.lang.reflect.Field;
