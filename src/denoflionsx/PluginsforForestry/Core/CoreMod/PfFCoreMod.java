@@ -1,7 +1,6 @@
 package denoflionsx.PluginsforForestry.Core.CoreMod;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import denoflionsx.PluginsforForestry.Core.CoreMod.ASM.ASMFluid;
 import java.io.File;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public class PfFCoreMod implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{ASMFluid.class.getName()};
+        return null;
     }
 
     @Override

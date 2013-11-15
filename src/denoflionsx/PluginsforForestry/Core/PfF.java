@@ -40,6 +40,7 @@ public class PfF {
     public static PfFCore core;
     public static final String channel = "PluginsFF";
     public static File source;
+    public static FMLPreInitializationEvent _event;
     
     public PfF() {
         PfFAPI.plugins = new PfFPluginManager();
@@ -47,6 +48,7 @@ public class PfF {
     
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event) {
+        _event = event;
         PfFAPI.instance = this;
         core = new PfFCore();
         source = event.getSourceFile();

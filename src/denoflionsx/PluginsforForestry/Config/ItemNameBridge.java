@@ -2,7 +2,6 @@ package denoflionsx.PluginsforForestry.Config;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import denoflionsx.PluginsforForestry.Utils.PfFLib;
 import denoflionsx.denLib.Lib.denLib;
 import java.io.File;
 import net.minecraft.item.Item;
@@ -34,7 +33,7 @@ public class ItemNameBridge {
                 map.put(name, id2);
             }
         } else {
-            map.put(name, PfFTuning.config.get("item", name + "_ItemID", PfFLib.MathUtils.getLastID(map.inverse())).getInt());
+            map.put(name, PfFTuning.config.get("item", name + "_ItemID", denLib.MathUtils.getLastID(map.inverse())).getInt());
             id = map.get(name);
         }
         Item i = null;

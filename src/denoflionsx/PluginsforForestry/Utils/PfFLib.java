@@ -54,22 +54,7 @@ public class PfFLib {
 
     public static class MathUtils {
 
-        public static int getLastID(BiMap<Integer, String> map) {
-            int ids[] = new int[map.size()];
-            int temp = 0;
-            for (Object o : map.keySet()) {
-                Integer i = (Integer) o;
-                ids[temp] = i;
-                temp++;
-            }
-            Arrays.sort(ids);
-            int f = 0;
-            if (ids.length != 0) {
-                f = ids[ids.length - 1];
-            }
-            f++;
-            return f;
-        }
+        
     }
 
     public static class LiquidUtils {
