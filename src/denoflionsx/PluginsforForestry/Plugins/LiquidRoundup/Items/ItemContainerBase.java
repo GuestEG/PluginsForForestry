@@ -222,6 +222,7 @@ public class ItemContainerBase extends Item implements IPfFContainer, IDenLibFlu
             fluidConfig = a.toArray(new String[a.size()]);
             PfF.core.setupConfig(PfF._event);
             PfF.Proxy.print("Saving fluid mappings to config file.");
+            saved = true;
         }
         denLibMod.worldHandler.removeHandler(this);
     }
