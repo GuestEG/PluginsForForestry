@@ -50,7 +50,9 @@ public class PfFTranslator {
     }
 
     public void overrideKey(String key, String overrideKey) {
-
+        for (LangObject o : trans.values()) {
+            o.overrideValue(key, translateKey(overrideKey));
+        }
     }
 
     public String translateKey(String key, String lang) {

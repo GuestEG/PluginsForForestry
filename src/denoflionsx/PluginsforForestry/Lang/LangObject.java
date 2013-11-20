@@ -34,4 +34,8 @@ public class LangObject {
         return prop;
     }
 
+    public void overrideValue(String key, String newValue) {
+        prop.setProperty(key, newValue);
+    }
+
 }
