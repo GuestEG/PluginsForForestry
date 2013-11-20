@@ -16,56 +16,56 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class PfFProxy implements IPfFProxy {
-    
+
     @Override
     public File getMappingFile(String tag) {
         return new File(PfF.core.mappingsDir.getAbsolutePath() + "/".concat(tag) + ".bin");
     }
-    
+
     @Override
     public void print(String msg) {
         FMLLog.info("[PfF]" + ": " + msg);
     }
-    
+
     @Override
     public String getIconCode(Icon icon) {
         return String.valueOf(0);
     }
-    
+
     @Override
     public void registerRecipe(ItemStack i, Object[] o) {
         GameRegistry.addRecipe(i, o);
     }
-    
+
     @Override
     public void warning(String msg) {
         FMLLog.warning("[PfF]: " + msg);
     }
-    
+
     @Override
     public void severe(String msg) {
         FMLLog.severe("[PfF]: " + msg);
     }
-    
+
     @Override
     public void sendMessageToPlayer(String msg) {
     }
-    
+
     @Override
     public String translate(String key) {
         return PfFTranslator.instance.translateKey(key);
     }
-    
+
     @Override
     public String getLang() {
         return "en_US";
     }
-    
+
     @Override
     public void setTabs() {
         PfFAPI.tab = new PfFTab();
     }
-    
+
     @Override
     public void findInternalAddons(File source) {
         this.print("Loading plugins...");
@@ -75,12 +75,12 @@ public class PfFProxy implements IPfFProxy {
         }
         this.print("Done. " + plugins.size() + " plugins loaded.");
     }
-    
+
     @Override
     public void registerShapelessRecipe(ItemStack i, ItemStack[] stacks) {
         GameRegistry.addShapelessRecipe(i, (Object[]) stacks);
     }
-    
+
     @Override
     public void registerOreRecipe(ItemStack i, Object[] o) {
         CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(i, o));

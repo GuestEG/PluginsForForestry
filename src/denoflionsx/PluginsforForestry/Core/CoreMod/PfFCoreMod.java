@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class PfFCoreMod implements IFMLLoadingPlugin {
 
-    public static boolean runtimeDeobfEnabled;
+    public static File mcDir;
 
     @Override
     public String[] getLibraryRequestClass() {
@@ -34,10 +34,6 @@ public class PfFCoreMod implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        File del = new File("./mods/denLib/ColorOverlayValues.db");
-        if (del.exists()) {
-            del.deleteOnExit();
-        }
-        runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
+        mcDir = (File) data.get("mcLocation");
     }
 }

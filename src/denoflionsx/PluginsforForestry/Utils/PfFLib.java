@@ -1,26 +1,15 @@
 package denoflionsx.PluginsforForestry.Utils;
 
-import com.google.common.collect.BiMap;
 import denoflionsx.denLib.Lib.denLib;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.liquids.LiquidContainerData;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
 
 public class PfFLib {
 
     public static class PffStringUtils {
 
         public static final String error = "BROKEN LIQUID NAME";
-
-        public static String cleanLiquidNameFromEvent(LiquidDictionary.LiquidRegisterEvent event) {
-            return cleanName(event.Name);
-        }
 
         public static String cleanName(String n) {
             try {
@@ -51,34 +40,7 @@ public class PfFLib {
             return denLib.StringUtils.readError;
         }
     }
-
-    public static class MathUtils {
-
-        
-    }
-
-    public static class LiquidUtils {
-
-        public static ItemStack getEmptyContainer(ItemStack s) {
-            for (LiquidContainerData a : LiquidContainerRegistry.getRegisteredLiquidContainerData()) {
-                if (a.filled.isItemEqual(s)) {
-                    return a.container;
-                }
-            }
-            return null;
-        }
-
-        public static ArrayList<ItemStack> getAllContainersForLiquid(LiquidStack s) {
-            ArrayList<ItemStack> containers = new ArrayList();
-            for (LiquidContainerData a : LiquidContainerRegistry.getRegisteredLiquidContainerData()) {
-                if (a.stillLiquid.isLiquidEqual(s)) {
-                    containers.add(a.filled);
-                }
-            }
-            return containers;
-        }
-    }
-
+    
     public static class FluidUtils {
 
         public static String fixName(String n) {

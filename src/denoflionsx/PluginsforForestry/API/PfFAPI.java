@@ -14,7 +14,6 @@ public class PfFAPI {
     public static IPfFPluginManager plugins;
     //----------------------------
     public static CreativeTabs tab;
-    //----------------------------
 
     // This only takes effect if done before init!
     public static void sendBlacklistRequest(String containerTag, String fluidTag) {

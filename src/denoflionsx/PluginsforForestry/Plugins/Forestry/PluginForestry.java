@@ -64,7 +64,7 @@ public class PluginForestry implements IPfFPlugin, IDenLibDictionaryHandler, IDe
         boolean b = Forestry.doesHaveExistingRecipe(item);
         PfF.Proxy.print(item.getDisplayName() + " = " + String.valueOf(b));
         if (!b) {
-            PfF.Proxy.print("Trying to register " + item.getDisplayName() + " with squeezer...");
+            //PfF.Proxy.print("Trying to register " + item.getDisplayName() + " with squeezer...");
             Forestry.squeezer(squeezer_time, new ItemStack[]{item}, juice);
         }
     }

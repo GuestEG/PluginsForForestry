@@ -31,6 +31,7 @@ public enum MasterLangEnum {
     item_woodenbucket_valentine("Love Bucket"),
     item_woodenbucket_spring("Spring Bucket"),
     item_woodenbucket_merica("Freedom Bucket");
+    //-----------------------------------------
     
     private final String value;
     public static final File master = new File(PfF.core.configDir, "en_US.lang");
