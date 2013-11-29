@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLibFluidHandler {
-    
+
     public static ItemCustomCoke itemCharCoke;
     public static FluidStack creosote;
     @ConfigField(category = "railcraft.features")
@@ -36,34 +36,32 @@ public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLib
     public static int CreosoteOilForImpregnatedSticks_Multiplier = 4;
     @ConfigField(category = "railcraft.creosote", comment = "This takes Sengir's seed oil value and multiplies it to get the Creosote value.")
     public static int CreosoteOilForImpregnatedCasings_Multiplier = 4;
-    
+
     @Override
     public void onPreLoad() {
-        if (Loader.isModLoaded("Railcraft")) {
-            denLibMod.fluids.register(this);
-        }
     }
-    
+
     @Override
     public String lookingForFluid() {
         return "creosote";
     }
-    
+
     @Override
     public void onEvent(FluidStack fluid) {
         creosote = fluid.copy();
     }
-    
+
     @Override
     public void onLoad() {
         if (Loader.isModLoaded("Railcraft")) {
+            denLibMod.fluids.register(this);
             if (solidFuels_enabled) {
                 itemCharCoke = (ItemCustomCoke) ItemNameBridge.registerItem("PfF:coke", ItemCustomCoke.class);
                 itemCharCoke.registerRecipe();
             }
         }
     }
-    
+
     @Override
     public void onPostLoad() {
         // Welcome to reflection hell.
@@ -78,7 +76,7 @@ public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLib
                     doCarpenter(impSticks, CreosoteOilForImpregnatedSticks_Multiplier);
                 }
             }
-            
+
             if (CreosoteOilForImpregnatedCasings) {
                 ItemStack pregCase = Forestry.items("impregnatedCasing");
                 if (pregCase != null) {
@@ -88,7 +86,7 @@ public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLib
             denLibMod.worldHandler.registerHandler(this);
         }
     }
-    
+
     private void doCarpenter(ItemStack item, int liquidAmount) {
         try {
             Class c = Class.forName("forestry.factory.gadgets.MachineCarpenter");
@@ -129,7 +127,7 @@ public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLib
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public void onWorldLoaded(World world) {
         FluidStack copy = denLib.LiquidStackUtils.getNewStackCapacity(creosote, 1);
