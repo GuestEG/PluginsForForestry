@@ -54,7 +54,17 @@ public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLib
     @Override
     public void onLoad() {
         if (Loader.isModLoaded("Railcraft")) {
-            denLibMod.fluids.register(this);
+            try{
+                denLibMod.fluids.register(this);
+            }catch(Throwable t){
+                if (denLibMod.fluids == null){
+                    PfF.Proxy.print("PluginRailcraft is reporting that the denLib fluid handler is null. This is impossible.");
+                }
+                if (this == null){
+                    PfF.Proxy.print("This message should never fire as it is impossible.");
+                }
+                t.printStackTrace();
+            }
             if (solidFuels_enabled) {
                 itemCharCoke = (ItemCustomCoke) ItemNameBridge.registerItem("PfF:coke", ItemCustomCoke.class);
                 itemCharCoke.registerRecipe();
@@ -68,6 +78,7 @@ public class PluginRailcraft implements IPfFPlugin, IDenLibWorldHandler, IDenLib
         if (Loader.isModLoaded("Railcraft")) {
             if (creosote == null) {
                 PfF.Proxy.severe("Creosote oil not found!");
+                return;
             }
             if (CreosoteOilForImpregnatedSticks) {
                 ItemStack impSticks = Forestry.items("stickImpregnated");
