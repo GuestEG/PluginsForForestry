@@ -2,6 +2,7 @@ package denoflionsx.PluginsforForestry.Plugins.Holiday.Objects;
 
 import denoflionsx.PluginsforForestry.Config.PfFTuning;
 import denoflionsx.PluginsforForestry.Core.PfF;
+import denoflionsx.PluginsforForestry.Lang.MasterLangEnum;
 import denoflionsx.PluginsforForestry.Lang.PfFTranslator;
 import denoflionsx.PluginsforForestry.Plugins.LiquidRoundup.client.IconConstants;
 import denoflionsx.denLib.Lib.denLib;
@@ -9,8 +10,8 @@ import denoflionsx.denLib.Lib.denLib;
 public class HolidayObject {
 
     public static final boolean holidayDebug = false;
-    private String name;
-    private DateObject runningDate;
+    private final String name;
+    private final DateObject runningDate;
     private String icon;
     private String key;
 
@@ -31,7 +32,7 @@ public class HolidayObject {
 
     public void setupHolidayContent() {
         IconConstants.woodenBucket = icon;
-        PfFTranslator.instance.overrideKey("item.pff.woodenbucket.name", key);
+        PfFTranslator.instance.overrideKey(MasterLangEnum.item_woodenbucket.toString(), key);
         PfF.Proxy.print(name.concat(" mode activated!"));
     }
 
